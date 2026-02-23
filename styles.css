@@ -1,0 +1,21 @@
+*{
+    box-sizing: border-box;
+
+}
+
+.main-container{
+    height: 100vh;
+    width: 100%;
+}
+
+.nav-container{
+    background-color:rgba(255, 255, 255, 0.929);
+
+}
+/* .nav-content{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:2rem;
+} */
+
