@@ -68,12 +68,13 @@ async function fetchMovies(query) {
             const poster = detail.Poster !== "N/A"
                 ? detail.Poster
                 : "https://via.placeholder.com/400x600";
+            
 
             const movieCard = `
                 <div class="bg-gray-700 rounded-md p-4 shadow-md text-white min-h-[500px]">
                     <img 
                         src="${poster}" 
-                        loading="lazy"
+                        
                         onerror="this.src='https://via.placeholder.com/400x600'"
                         class="w-full h-56 object-cover rounded"
                     >
