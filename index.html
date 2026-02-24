@@ -8,11 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-        integrity="sha512-XXXXX+y+XXXXX/XXXX==\" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body class="bg-gradient-to-r from-slate-900 to-slate-700">
-    <div class="main-container">
+<body class="bg-gradient-to-r from-slate-900 to-slate-700 flex flex-col min-h-screen">
+    <div class="main-container flex-grow">
         <header>
             <div class="nav-container p-6 lg:p-2 flex justify-between items-center lg:gap-80 md:gap-40">
                 <div class="nav-icon font-bold text-xl italic bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent lg:text-2xl"
@@ -21,11 +21,12 @@
                     class="nav-content hidden w-full left-0 px-4 my-2 flex flex-col
              lg:flex lg:flex-row lg:flex-1 items-center gap-2 lg:static md:static md:flex md:flex-row md:flex-1 lg:w-auto">
                     <div class="movie-search w-full">
-                        <input class="w-full text-black border-black border-2 rounded-md p-1" id="navSearchInput" type="search"
-                            placeholder="Search Movies....">
+                        <input class="w-full text-black border-black border-2 rounded-md p-1" id="navSearchInput"
+                            type="search" placeholder="Search Movies....">
                     </div>
                     <div class="movie-genre w-full">
-                        <select id="genre" name="genre" class="w-full text-black border-black border-2 rounded-md my-2 p-1.5">
+                        <select id="genre" name="genre"
+                            class="w-full text-black border-black border-2 rounded-md my-2 p-1.5">
                             <!-- <option value="">Select Genre</option> -->
                             <!-- <option value="action">Action</option>
                             <option value="comedy">Comedy</option> -->
@@ -36,13 +37,17 @@
 
             </div>
         </header>
-       <main class="text-white py-8 px-4">
-        
-  <div class="movie-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
-    
-    </div>
-  </div>
-</main>
+        <main class="text-white py-8 px-4">
+
+            <div class="movie-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+
+            </div>
+    </main>
+    <footer>
+        <div class="border-t border-gray-700 text-center py-4 text-sm text-gray-500">
+            © 2026 MoviesWithGuvies. All rights reserved.
+        </div>
+    </footer>
     </div>
     <script src="main.js"></script>
 </body>
