@@ -1,6 +1,13 @@
 const Api_key = "b52735b3";
 const BASE_URL = "https://www.omdbapi.com/";
 const movieList = document.querySelector(".movie-list");
+let currentPage = 1;
+let totalResults = 0;
+let currentQuery = "batman";
+
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageInfo = document.getElementById("pageInfo");
 
 const navSearchInput = document.getElementById("navSearchInput");
 const genreSet = new Set();
@@ -24,7 +31,19 @@ navSearchInput.addEventListener("input", () => {
     }
 });
 
-async function fetchMovies(query) {
+prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+        fetchMovies(currentQuery, currentPage - 1);
+    }
+});
+
+nextBtn.addEventListener("click", () => {
+    const totalPages = Math.ceil(totalResults / 10);
+    if (currentPage < totalPages) {
+        fetchMovies(currentQuery, currentPage + 1);
+    }
+});
+async function fetchMovies(query, page = 1) {
 
     genreSet.clear();
     allMovies = [];
@@ -32,8 +51,11 @@ async function fetchMovies(query) {
 
     try {
 
+        // const response = await fetch(
+        //     `${BASE_URL}?s=${query}&apikey=${Api_key}`
+        // );
         const response = await fetch(
-            `${BASE_URL}?s=${query}&apikey=${Api_key}`
+            `${BASE_URL}?s=${query}&page=${page}&apikey=${Api_key}`
         );
 
         if (!response.ok) {
@@ -41,6 +63,9 @@ async function fetchMovies(query) {
         }
 
         const data = await response.json();
+        totalResults = Number(data.totalResults);
+        currentPage = page;
+        currentQuery = query;
         movieList.innerHTML = "";
 
         if (data.Response !== "True") {
@@ -67,20 +92,20 @@ async function fetchMovies(query) {
 
             const poster = detail.Poster !== "N/A"
                 ? detail.Poster
-                : "https://via.placeholder.com/400x600";
-            
+                : "https://placehold.co/400x600?text=No+Poster";
+
 
             const movieCard = `
                 <div class="bg-gray-700 rounded-md p-4 shadow-md text-white min-h-[500px]">
                     <img 
-                        src="${poster}" 
-                        
-                        onerror="this.src='https://via.placeholder.com/400x600'"
+                        src="${poster}" alt="${detail.Title}"
                         class="w-full h-56 object-cover rounded"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x600?text=No+Poster'"
                     >
                     <h2 class="mt-3 text-lg font-bold">${detail.Title}</h2>
                     <p class="text-sm text-gray-400">
-                        ⭐ ${detail.imdbRating} | ${detail.Runtime}
+                        ⭐ ${detail.imdbRating !== "N/A" ? detail.imdbRating : "Not Found"} | ${detail.Runtime !== "N/A" ? detail.Runtime : "Not Found"}
                     </p>
                     <p class="text-sm mt-2">
                         <strong>Genre:</strong> ${detail.Genre}
@@ -96,6 +121,7 @@ async function fetchMovies(query) {
         }
 
         buildGenreDropdown();
+        updatePagination();
 
     } catch (error) {
         console.error("Fetch error:", error);
@@ -108,7 +134,7 @@ async function fetchMovies(query) {
     }
 }
 
-fetchMovies("batman");
+fetchMovies(currentQuery, 1);
 
 const genreSelect = document.getElementById("genre");
 
@@ -170,6 +196,14 @@ function buildGenreDropdown() {
         option.textContent = genre;
         movieGenre.appendChild(option);
     });
+}
+function updatePagination() {
+    const totalPages = Math.ceil(totalResults / 10);
+
+    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages;
 }
 
 const togglebtn = document.querySelector(".toggle-btn");
