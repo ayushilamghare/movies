@@ -19,28 +19,17 @@ navSearchInput.addEventListener("keydown", (e) => {
         const query = navSearchInput.value.trim();
 
         if (query !== "") {
-            fetchMovies(query,1);
+            fetchMovies(query, 1);
         }
     }
 });
 
-// navSearchInput.addEventListener("input", () => {
-//     const query = navSearchInput.value.trim();
-//     if (query.length > 2) {
-//         fetchMovies(query,1);
-//     }
-// });
 navSearchInput.addEventListener("input", () => {
-  clearTimeout(searchTimeout)
-
-  const query = navSearchInput.value.trim()
-
-  if(query.length > 2){
-    searchTimeout = setTimeout(()=>{
-      fetchMovies(query,1)
-    },400)
-  }
-})
+    const query = navSearchInput.value.trim();
+    if (query.length > 2) {
+        fetchMovies(query, 1);
+    }
+});
 
 prevBtn.addEventListener("click", () => {
     if (currentPage > 1) {
@@ -130,6 +119,50 @@ async function fetchMovies(query, page = 1) {
 
             movieList.innerHTML += movieCard;
         }
+
+        const detailPromises = data.Search.map(movie =>
+            fetch(`${BASE_URL}?i=${movie.imdbID}&apikey=${Api_key}`)
+                .then(res => res.json())
+        );
+
+        const details = await Promise.all(detailPromises);
+
+        let moviesHTML = "";
+
+        details.forEach(detail => {
+
+            allMovies.push(detail);
+
+            detail.Genre.split(",").forEach(g => {
+                genreSet.add(g.trim());
+            });
+
+            const poster = detail.Poster !== "N/A"
+                ? detail.Poster
+                : "https://placehold.co/400x600?text=No+Poster";
+
+            moviesHTML += `
+        <div class="bg-gray-700 rounded-md p-4 shadow-md text-white min-h-[500px]">
+            <img src="${poster}" alt="${detail.Title}"
+                class="w-full h-56 object-cover rounded"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='https://placehold.co/400x600?text=No+Poster'">
+
+            <h2 class="mt-3 text-lg font-bold">${detail.Title}</h2>
+
+            <p class="text-sm text-gray-400">
+            ⭐ ${detail.imdbRating !== "N/A" ? detail.imdbRating : "Not Found"} |
+            ${detail.Runtime !== "N/A" ? detail.Runtime : "Not Found"}
+            </p>
+
+            <p class="text-sm mt-2"><strong>Genre:</strong> ${detail.Genre}</p>
+            <p class="text-sm mt-2">${detail.Plot}</p>
+            <p class="text-sm mt-2"><strong>Actors:</strong> ${detail.Actors}</p>
+        </div>
+    `;
+        });
+
+        movieList.innerHTML = moviesHTML;
 
         buildGenreDropdown();
         updatePagination();
