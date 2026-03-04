@@ -19,17 +19,28 @@ navSearchInput.addEventListener("keydown", (e) => {
         const query = navSearchInput.value.trim();
 
         if (query !== "") {
-            fetchMovies(query);
+            fetchMovies(query,1);
         }
     }
 });
 
+// navSearchInput.addEventListener("input", () => {
+//     const query = navSearchInput.value.trim();
+//     if (query.length > 2) {
+//         fetchMovies(query,1);
+//     }
+// });
 navSearchInput.addEventListener("input", () => {
-    const query = navSearchInput.value.trim();
-    if (query.length > 2) {
-        fetchMovies(query);
-    }
-});
+  clearTimeout(searchTimeout)
+
+  const query = navSearchInput.value.trim()
+
+  if(query.length > 2){
+    searchTimeout = setTimeout(()=>{
+      fetchMovies(query,1)
+    },400)
+  }
+})
 
 prevBtn.addEventListener("click", () => {
     if (currentPage > 1) {
